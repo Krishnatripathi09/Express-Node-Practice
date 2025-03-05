@@ -1,0 +1,19 @@
+{
+  "name": "node-practice-all",
+  "version": "1.0.0",
+  "description": "Project to practice all node ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "Krishna Tripathi",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "mongoose": "^8.11.0",
+    "validator": "^13.12.0"
+  }
+}
