@@ -35,10 +35,10 @@ authRouter.post("/signin", async (req, res) => {
       res.status(400).send("User Not Found Please Enter Valid Email");
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await user.verifyPWD(password);
 
     if (isValidPassword) {
-      const token = await jwt.sign({ id: user._id }, "WebSecretToken@987");
+      const token = await user.signJWT();
       res.cookie("token", token, {
         expires: new Date(Date.now() + 1 * 3600000),
       });

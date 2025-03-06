@@ -7,15 +7,14 @@ const app = express();
 const UserAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
-
     if (!token) {
       res.status(401).send("Please Log-In Again");
     }
 
     const user = await jwt.verify(token, "WebSecretToken@987");
-    const { id } = user;
+    const { _id } = user;
 
-    const foundUser = await User.findById(id).select("firstName lastName"); //console.log(foundUser);
+    const foundUser = await User.findById(_id).select("firstName lastName"); //console.log(foundUser);
     if (!foundUser) {
       res.status(404).send("User Not Found ☹");
     }
