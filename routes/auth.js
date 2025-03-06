@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
@@ -37,6 +38,10 @@ authRouter.post("/signin", async (req, res) => {
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (isValidPassword) {
+      const token = await jwt.sign({ id: user._id }, "WebSecretToken@987");
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 1 * 3600000),
+      });
       res.send("Log-In Successfull");
     } else {
       res.status(400).send("Invalid Password");

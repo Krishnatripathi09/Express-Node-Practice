@@ -1,20 +1,32 @@
 const express = require("express");
+const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
-const adminAuth = (req, res, next) => {
-  console.log("Admin Auth is Getting Checked");
+const UserAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
 
-  const token = "ABC";
+    if (!token) {
+      res.status(401).send("Please Log-In Again");
+    }
 
-  const isAdminAuthorized = token === "ABC";
-  if (!isAdminAuthorized) {
-    res.status(401).send("Un-Authorized");
-  } else {
+    const user = await jwt.verify(token, "WebSecretToken@987");
+    const { id } = user;
+
+    const foundUser = await User.findById(id).select("firstName lastName"); //console.log(foundUser);
+    if (!foundUser) {
+      res.status(404).send("User Not Found ☹");
+    }
+
+    req.user = foundUser;
     next();
+  } catch (err) {
+    res.status(404).send("Error Occrured :" + err);
   }
 };
 
 module.exports = {
-  adminAuth,
+  UserAuth,
 };

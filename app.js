@@ -2,10 +2,13 @@ const express = require("express");
 const dbConnect = require("./config/database");
 const User = require("./models/user");
 const { authRouter } = require("./routes/auth");
+const { userRouter } = require("./routes/user");
+const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = 7777;
 
 app.use(express.json());
+app.use(cookieParser());
 
 dbConnect()
   .then(() => {
@@ -21,3 +24,4 @@ dbConnect()
   });
 
 app.use("/", authRouter);
+app.use("/", userRouter);
