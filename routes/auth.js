@@ -2,10 +2,12 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const { validateSignUpData } = require("../utils/validation");
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
   try {
+    validateSignUpData(req);
     const { firstName, lastName, email, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
