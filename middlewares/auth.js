@@ -14,9 +14,7 @@ const UserAuth = async (req, res, next) => {
     const user = await jwt.verify(token, "WebSecretToken@987");
     const { _id } = user;
 
-    const foundUser = await User.findById(_id).select(
-      "firstName lastName password"
-    ); //console.log(foundUser);
+    const foundUser = await User.findById(_id).select("firstName lastName"); //console.log(foundUser);
     if (!foundUser) {
       res.status(404).send("User Not Found ☹");
     }

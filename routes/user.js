@@ -1,8 +1,12 @@
 const express = require("express");
 const userRouter = express.Router();
 const { UserAuth, PasswordAuth } = require("../middlewares/auth");
-const { validateProfileData } = require("../utils/validation");
+const {
+  validateProfileData,
+  validateSignUpData,
+} = require("../utils/validation");
 const bcrypt = require("bcrypt");
+const User = require("../models/user");
 
 const app = express();
 
@@ -31,7 +35,6 @@ userRouter.patch("/user/edit", UserAuth, async (req, res) => {
 userRouter.patch("/user/updatepassword", PasswordAuth, async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
-
     loggedInUser = req.user;
     if (!oldPassword || !newPassword) {
       res.status(404).send("Both old and New Passwords are Required");
