@@ -56,7 +56,7 @@ requestRouter.post(
         status +
         " " +
         " in " +
-        toUserId.firstName,
+        toUser.firstName,
       data,
     });
   }
