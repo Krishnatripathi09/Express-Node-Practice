@@ -5,6 +5,7 @@ const {
   validateProfileData,
   validateSignUpData,
 } = require("../utils/validation");
+const { ConnectionRequestModel } = require("../models/connectionRequest");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
@@ -53,6 +54,26 @@ userRouter.patch("/user/updatepassword", PasswordAuth, async (req, res) => {
     res.status(200).send("Password Updated SuccessFully");
   } catch (err) {
     res.status(500).send("Something Went Wrong !" + err);
+  }
+});
+
+userRouter.get("/user/requests/received", UserAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequests = await ConnectionRequestModel.find({
+      toUserId: loggedInUser._id,
+      status: "interested",
+    })
+      .populate("fromUserId", "firstName lastName")
+      .populate("toUserId", "firstName lastName");
+
+    res.json({
+      message: "Connection Requests Fetched Successfully",
+      data: connectionRequests,
+    });
+  } catch (err) {
+    res.status(400).send("Error : " + err.message);
   }
 });
 
