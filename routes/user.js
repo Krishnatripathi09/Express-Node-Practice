@@ -77,6 +77,19 @@ userRouter.get("/user/requests/received", UserAuth, async (req, res) => {
   }
 });
 
+userRouter.get("/user/connections", UserAuth, async (req, res) => {
+  const loggedInUser = req.user;
+
+  const connectionRequest = await ConnectionRequestModel.find({
+    $or: [
+      { toUserId: loggedInUser._id, status: "accepted" },
+      { fromUserId: loggedInUser._id, status: "accepted" },
+    ],
+  })
+    .populate("fromUserId", "firstName lastName")
+    .populate("toUserId", "firstName lastName");
+});
+
 module.exports = {
   userRouter,
 };
