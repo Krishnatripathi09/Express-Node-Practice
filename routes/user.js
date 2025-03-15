@@ -78,16 +78,29 @@ userRouter.get("/user/requests/received", UserAuth, async (req, res) => {
 });
 
 userRouter.get("/user/connections", UserAuth, async (req, res) => {
-  const loggedInUser = req.user;
+  try {
+    const loggedInUser = req.user;
 
-  const connectionRequest = await ConnectionRequestModel.find({
-    $or: [
-      { toUserId: loggedInUser._id, status: "accepted" },
-      { fromUserId: loggedInUser._id, status: "accepted" },
-    ],
-  })
-    .populate("fromUserId", "firstName lastName")
-    .populate("toUserId", "firstName lastName");
+    const connectionRequest = await ConnectionRequestModel.find({
+      $or: [
+        { toUserId: loggedInUser._id, status: "accepted" },
+        { fromUserId: loggedInUser._id, status: "accepted" },
+      ],
+    })
+      .populate("fromUserId", "firstName lastName")
+      .populate("toUserId", "firstName lastName");
+
+    const data = await connectionRequest.map((row) => {
+      if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+        return row.toUserId;
+      }
+      return row.fromUserId;
+    });
+
+    res.json({ connectionRequest });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 module.exports = {
