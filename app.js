@@ -8,10 +8,6 @@ app.listen(PORT, () => {
   console.log("Server is listening on PORT 3000");
 });
 
-app.use("/hello", (req, res) => {
-  res.send("Hello from /hello Route");
-});
-
-app.use("/", (req, res) => {
-  res.send("Hello from Express");
+app.get("/user", (req, res) => {
+  res.send("Got all the Usera kilua");
 });
